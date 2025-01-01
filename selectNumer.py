@@ -39,7 +39,6 @@ class SelectNumber:
             # Draw the number in the center of the button
             surface.blit(text_surface, (text_x, text_y))
 
-    #Nhan vao nut de thay doi gia tri
     def button_clicked(self, mouse_x: int, mouse_y: int) -> None:
         for index, pos in enumerate(self.btn_positions):
             if self.on_button(mouse_x, mouse_y, pos):

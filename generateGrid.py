@@ -82,12 +82,12 @@ class Grid:
         remove_numbers(self.grid)
         self.pre_occupied_cells_coordinates = self.pre_occupied_cells()
         self.win = False
-        self.start_time = time.time()  # Cập nhật lại thời gian khi restart
+        self.start_time = time.time()
 
     def is_cell_preoccupied(self, x: int, y: int) -> bool:
         """Check for none-playable cells: preoccupied/ initialized cells """
-        for cell in self.pre_occupied_cells_coordinates: #Truy cap phuong thuc pre_occupied_cells()
-            if x == cell[1] and y == cell[0]: # x is col, y is row
+        for cell in self.pre_occupied_cells_coordinates:
+            if x == cell[1] and y == cell[0]:
                 return True
         return False
 
@@ -95,7 +95,7 @@ class Grid:
         """Trả về thời gian còn lại trong 3 giây"""
         elapsed_time = time.time() - self.start_time
         remaining_time = 60 - int(elapsed_time)
-        return remaining_time if remaining_time >= 0 else 0  # Không cho phép thời gian dưới 0
+        return remaining_time if remaining_time >= 0 else 0
 
     def lock_grid(self) -> None:
         """Khóa bảng khi hết giờ"""
