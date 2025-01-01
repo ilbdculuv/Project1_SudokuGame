@@ -100,11 +100,9 @@ class Grid:
     def lock_grid(self) -> None:
         """Khóa bảng khi hết giờ"""
         if self.get_remaining_time() == 0:
-            self.win = False  # Không set win = True khi hết giờ (thua)
-            # Thêm thông báo "You Lose!" khi hết giờ
+            self.win = False
             time_out_surface = self.game_font.render("You Lose!", True, (214, 15, 15))
             return time_out_surface
-
 
     #Kiem tra so voi bang ban dau
     def check_grids(self):
@@ -114,9 +112,8 @@ class Grid:
                     return False
         return True
 
-    #Kiem tra xem mot o co dien duoc so hay khong
     def get_mouse_click(self, x : int, y: int) -> None:
-        if self.get_remaining_time() > 0:  # Chỉ cho phép người chơi chọn ô khi còn thời gian
+        if self.get_remaining_time() > 0:
             if x <= 720:
                 grid_x, grid_y = x // 80, y // 80
                 if not self.is_cell_preoccupied(grid_x, grid_y):
@@ -138,29 +135,23 @@ class Grid:
         return occupied_cell_coordinates
 
     def __draw_lines(self, pg, surface) -> None:
-        # Vẽ các đường phụ (đường màu trắng mỏng) trước
+        # Vẽ các đường phụ (màu trắng mỏng)
         for index, point in enumerate(self.line_coordinates):
             if index != 2 and index != 5 and index != 10 and index != 13 and index != 16:
 
-                pg.draw.line(surface, (231,233,233), point[0], point[1], 1)  # Đường trắng mỏng
+                pg.draw.line(surface, (231,233,233), point[0], point[1], 1)
 
-        # Vẽ các đường chính (đường màu đen dày hơn) sau
+        # Vẽ các đường chính (đường màu đen dày)
         for index, point in enumerate(self.line_coordinates):
-
-            # Các đường chính khác (đường đen dày hơn)
             if  index == 2 or index == 5 or index == 10 or index == 13 or index == 16:
-                # Điều chỉnh các điểm đầu và điểm cuối của đường
                 start_point = point[0]
                 end_point = point[1]
+                if start_point[0] < 0: start_point = (0, start_point[1])
+                if end_point[0] > 715: end_point = (720, end_point[1])
+                if start_point[1] < 0: start_point = (start_point[0], 0)
+                if end_point[1] > 700: end_point = (end_point[0], 700)
 
-                # Giới hạn các đường kẻ đen đậm để chúng không vượt quá bảng
-                if start_point[0] < 0: start_point = (0, start_point[1])  # Bắt đầu từ x = 0 nếu x < 0
-                if end_point[0] > 715: end_point = (720, end_point[1])  # Dừng tại x = 720 nếu x > 720
-
-                if start_point[1] < 0: start_point = (start_point[0], 0)  # Bắt đầu từ y = 0 nếu y < 0
-                if end_point[1] > 700: end_point = (end_point[0], 700)  # Dừng tại y = 720 nếu y > 720
-
-                pg.draw.line(surface, (0, 0, 0), point[0], point[1], 3)  # Đường đen dày
+                pg.draw.line(surface, (0, 0, 0), point[0], point[1], 3)
     # Vẽ thêm đường viền bao quanh bảng
             offset = 2 # Dịch xuống và sang phải
 
@@ -172,18 +163,17 @@ class Grid:
             # Đường viền trái
             pg.draw.line(surface, (0, 0, 0), (offset, 720), (offset, offset), 3)  # Đường viền t
     def __draw_numbers(self, surface) -> None:
-        """Draw the grid numbers """
+        """Vẽ các số trong bảng"""
         for y in range(len(self.grid)):
             for x in range(len(self.grid[y])):
-                if self.get_cell(x, y) != 0: #Kiem tra xem mot o co trong khong
+                if self.get_cell(x, y) != 0:
                     if (y, x) in self.pre_occupied_cells_coordinates:
-                        text_surface = self.game_font.render(str(self.get_cell(x, y)), True, (108,214,236)) #xanh duong
+                        text_surface = self.game_font.render(str(self.get_cell(x, y)), True, (108,214,236))
                     else:
                         text_surface = self.game_font.render(str(self.get_cell(x, y)), True, (0, 255, 0))
 
-                    if self.get_cell(x, y) != self.__test_grid[y][x]: #check xem co trung voi ket qua chinh xac khong
-                        text_surface = self.game_font.render(str(self.get_cell(x, y)), True, (255, 0, 0)) # mau do
-
+                    if self.get_cell(x, y) != self.__test_grid[y][x]:
+                        text_surface = self.game_font.render(str(self.get_cell(x, y)), True, (255, 0, 0))
                     surface.blit(text_surface,
                                 (x * self.cell_size + self.num_x_offset, y * self.cell_size + self.num_y_offset))
 
